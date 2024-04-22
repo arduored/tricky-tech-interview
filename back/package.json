@@ -1,5 +1,13 @@
 {
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node ./dist/server.mjs"
+  },
   "dependencies": {
+    "@types/node": "^20.12.7",
     "fastify": "^4.26.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
   }
 }
