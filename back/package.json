@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -outDir dist",
     "start": "npm run build && node ./dist/server.mjs"
   },
   "dependencies": {
