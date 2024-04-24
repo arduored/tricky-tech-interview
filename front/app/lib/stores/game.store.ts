@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Collidable, GameState } from "../types";
+import { Collidable } from "../types";
 
 type GameStore = {
   tasks: Array<Collidable>;

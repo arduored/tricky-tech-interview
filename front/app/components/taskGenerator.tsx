@@ -1,5 +1,5 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { useState } from "react";
+import { FC, useState } from "react";
 import {
   Box3,
   BoxGeometry,
@@ -10,7 +10,7 @@ import {
 } from "three";
 import useGameHelper from "../lib/hooks/useGameHelper";
 import { useGameStore } from "../lib/stores/game.store";
-import { debounce } from "../lib/utils";
+import { INITIAL_TASK, TASK_SPAWN_RATE } from "../lib/contants";
 
 export default function TaskGenerator() {
   const { scene } = useThree();
@@ -20,7 +20,7 @@ export default function TaskGenerator() {
 
   let delay = 0;
   useFrame((_, delta) => {
-    if (delay > 2) {
+    if (delay > TASK_SPAWN_RATE) {
       delay = 0;
       generateTask();
     }
@@ -30,7 +30,7 @@ export default function TaskGenerator() {
 
   const generateTask = (): void => {
     const mesh = new Mesh(
-      new BoxGeometry(0.3, 0.3, 0),
+      new BoxGeometry(...INITIAL_TASK),
       new MeshBasicMaterial()
     );
 
