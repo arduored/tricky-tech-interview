@@ -13,7 +13,6 @@ import useGameHelper from "../lib/hooks/useGameHelper";
 import { useGameStore } from "../lib/stores/game.store";
 import { Maybe } from "../lib/types";
 import {
-  INITIAL_POS,
   INITIAL_SHIP,
   INITIAL_WORKLOAD,
   LEFT,
@@ -26,9 +25,15 @@ export default function Ship() {
   const { scene } = useThree();
   const shipRef = useRef<any>();
   const control = useShipControl();
-  const { isInFieldOfView, canMove } = useGameHelper();
+  const {
+    isInFieldOfView,
+    canMove,
+    getShipInitialPosition,
+    updateBoundingBox,
+  } = useGameHelper();
   const { workLoads, setWorkLoads } = useGameStore();
 
+  const [initialPosition] = useState<Vector3>(getShipInitialPosition());
   const [direction, setDirection] = useState<Vector3>();
   const [meshes, setMeshes] = useState(new Group());
 
@@ -77,7 +82,7 @@ export default function Ship() {
       },
     } = shipRef;
     mesh.userData = { value: 10 };
-    mesh.position.set(x, y + 0.1, 0);
+    mesh.position.set(x, y, 0);
 
     const box = new Box3(new Vector3(), new Vector3());
     box.setFromObject(mesh);
@@ -94,13 +99,7 @@ export default function Ship() {
       for (const projectile of projectiles?.children) {
         projectile.position.add(UP);
 
-        workLoads.forEach((wl) => {
-          if (wl.mesh.id === projectile.id && wl.mesh.geometry.boundingBox) {
-            wl.bb
-              .copy(wl.mesh.geometry.boundingBox)
-              .applyMatrix4(wl.mesh.matrixWorld);
-          }
-        });
+        workLoads.forEach((wl) => updateBoundingBox(wl, projectile));
 
         if (!isInFieldOfView(projectile)) {
           projectile.removeFromParent();
@@ -110,7 +109,7 @@ export default function Ship() {
   };
 
   return (
-    <mesh ref={shipRef} position={INITIAL_POS} name="ship">
+    <mesh ref={shipRef} position={initialPosition} name="ship">
       <coneGeometry args={INITIAL_SHIP} />
       <meshBasicMaterial />
     </mesh>

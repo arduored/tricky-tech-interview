@@ -1,5 +1,5 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { FC, useState } from "react";
+import { useState } from "react";
 import {
   Box3,
   BoxGeometry,
@@ -10,13 +10,13 @@ import {
 } from "three";
 import useGameHelper from "../lib/hooks/useGameHelper";
 import { useGameStore } from "../lib/stores/game.store";
-import { INITIAL_TASK, TASK_SPAWN_RATE } from "../lib/contants";
+import { DOWN, INITIAL_TASK, TASK_SPAWN_RATE } from "../lib/contants";
 
 export default function TaskGenerator() {
   const { scene } = useThree();
-  const { checkCollision } = useGameHelper();
+  const { checkCollision, updateBoundingBox } = useGameHelper();
   const [meshes, setMeshes] = useState(new Group());
-  const { tasks, setTasks } = useGameStore();
+  const { tasks, setTasks, worldWidth, worldHeight } = useGameStore();
 
   let delay = 0;
   useFrame((_, delta) => {
@@ -24,6 +24,7 @@ export default function TaskGenerator() {
       delay = 0;
       generateTask();
     }
+    updateTasksPosition();
     checkCollision(tasks);
     delay += delta;
   });
@@ -35,7 +36,12 @@ export default function TaskGenerator() {
     );
 
     mesh.userData = { value: 10, life: 50 };
-    mesh.position.set(Math.random(), Math.random(), 0);
+    const ambivalent = Math.random() > 0.5 ? 1 : -1;
+    mesh.position.set(
+      Math.floor(Math.random() * worldWidth * ambivalent),
+      worldHeight / 2,
+      0
+    );
 
     const box = new Box3(new Vector3(), new Vector3());
     box.setFromObject(mesh);
@@ -44,6 +50,14 @@ export default function TaskGenerator() {
     setTasks({ mesh, bb: box });
 
     scene.add(meshes);
+  };
+
+  const updateTasksPosition = (): void => {
+    for (const taskMesh of meshes.children) {
+      taskMesh.position.add(DOWN);
+
+      tasks.forEach((t) => updateBoundingBox(t, taskMesh));
+    }
   };
   return null;
 }

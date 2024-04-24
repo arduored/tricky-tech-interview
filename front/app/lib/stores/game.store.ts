@@ -4,8 +4,12 @@ import { Collidable } from "../types";
 type GameStore = {
   tasks: Array<Collidable>;
   workLoads: Array<Collidable>;
+  worldWidth: number;
+  worldHeight: number;
   setTasks: (task: Collidable) => void;
+  setWorldHeight: (height: number) => void;
   setWorkLoads: (wl: Collidable) => void;
+  setWorldWidth: (width: number) => void;
   deleteWorkLoad: (wl: Collidable) => void;
   deleteTask: (task: Collidable) => void;
 };
@@ -13,6 +17,11 @@ type GameStore = {
 export const useGameStore = create<GameStore>()((set) => ({
   tasks: [],
   workLoads: [],
+  worldWidth: 0,
+  worldHeight: 0,
+  setWorldWidth: (width: number) =>
+    set(() => ({ worldWidth: Math.floor(width / 2) })),
+  setWorldHeight: (height: number) => set(() => ({ worldHeight: height })),
   setTasks: (task: Collidable) =>
     set((state) => ({ tasks: [...state.tasks, task] })),
   setWorkLoads: (wl: Collidable) =>
