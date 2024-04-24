@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Title from "./components/title";
+import BackButton from "./components/backButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Title />
+        <BackButton />
         <div className="w-2/3 mx-auto">{children}</div>
       </body>
     </html>
