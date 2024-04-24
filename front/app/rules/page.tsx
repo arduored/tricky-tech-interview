@@ -16,9 +16,9 @@ export default function Rules() {
           it. To destroy it, you must shoot an white circle.
         </li>
         <li>
-          For each task that passes behind your ship, you'll lose a vacation
-          day. You have 3 vacation day to start. One more mistake after that and
-          its the burnout!
+          For each task that passes behind your ship, you&apos;ll lose a
+          vacation day. You have 3 vacation day to start. One more mistake after
+          that and its the burnout!
         </li>
       </ol>
     </div>
