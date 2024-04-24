@@ -58,6 +58,7 @@ export default function useGameHelper(): GameHelper {
         if (task.bb.intersectsBox(workLoad.bb)) {
           task.mesh.userData.life -= workLoad.mesh.userData.value;
           deleteWorkLoad(workLoad);
+
           if (task.mesh.userData.life === 0) {
             setScore(task.mesh.userData.value);
             deleteTask(task);

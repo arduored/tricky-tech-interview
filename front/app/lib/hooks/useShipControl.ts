@@ -7,11 +7,11 @@ export default function useShipControl() {
   useEffect(() => {
     function filterArrowKeys(e: KeyboardEvent) {
       e.preventDefault();
-      if (e.key === "a" || e.key === "arrowLeft") {
+      if (e.key === "a" || e.key === "ArrowLeft") {
         setControl("left");
       }
 
-      if (e.key === "d" || e.key === "arrowRight") {
+      if (e.key === "d" || e.key === "ArrowRight") {
         setControl("right");
       }
 
