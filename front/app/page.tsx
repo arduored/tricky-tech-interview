@@ -1,6 +1,5 @@
 "use client";
 
-import Title from "./components/title";
 import Menu from "./components/menu";
 import Info from "./info/pages";
 
