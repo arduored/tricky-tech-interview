@@ -12,6 +12,7 @@ interface GameHelper {
   getShipInitialPosition: () => Vector3;
   updateBoundingBox: (c: Collidable, o: Object3D<Object3DEventMap>) => void;
   chooseTaskConfig: () => TaskConfig;
+  hasOverFlawn: (tPostion: Vector3) => boolean;
 }
 
 export default function useGameHelper(): GameHelper {
@@ -19,6 +20,7 @@ export default function useGameHelper(): GameHelper {
   const {
     workLoads,
     worldWidth,
+    worldHeight,
     tasksConfig,
     setWorldWidth,
     setWorldHeight,
@@ -122,6 +124,10 @@ export default function useGameHelper(): GameHelper {
     }
   };
 
+  const hasOverFlawn = (taskPosition: Vector3): boolean => {
+    return taskPosition.y < (worldHeight * -1) / 2;
+  };
+
   return {
     isInFieldOfView,
     canMove,
@@ -129,5 +135,6 @@ export default function useGameHelper(): GameHelper {
     getShipInitialPosition,
     updateBoundingBox,
     chooseTaskConfig,
+    hasOverFlawn,
   };
 }

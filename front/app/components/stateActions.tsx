@@ -26,7 +26,9 @@ export default function StateActions({ state }: StateActionsProps) {
 
   return (
     <div className="flex justify-around">
-      {!state || state === "PAUSED" ? renderPlayButton() : renderButtons(state)}
+      {!state || state !== "RUNNING"
+        ? renderPlayButton()
+        : renderButtons(state)}
     </div>
   );
 }

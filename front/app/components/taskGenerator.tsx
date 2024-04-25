@@ -14,9 +14,10 @@ import { DOWN, INITIAL_TASK, TASK_SPAWN_RATE } from "../lib/contants";
 
 export default function TaskGenerator() {
   const { scene } = useThree();
-  const { checkCollision, updateBoundingBox, chooseTaskConfig } =
+  const { checkCollision, updateBoundingBox, chooseTaskConfig, hasOverFlawn } =
     useGameHelper();
-  const { tasks, setTasks, worldWidth, worldHeight } = useGameStore();
+  const { tasks, setTasks, worldWidth, worldHeight, takeVacationDay } =
+    useGameStore();
 
   const [meshes, setMeshes] = useState(new Group());
 
@@ -59,6 +60,12 @@ export default function TaskGenerator() {
   const updateTasksPosition = (): void => {
     for (const taskMesh of meshes.children) {
       taskMesh.position.add(DOWN);
+      const shouldTakeAVacationDay = hasOverFlawn(taskMesh.position);
+
+      if (shouldTakeAVacationDay) {
+        takeVacationDay();
+        taskMesh.removeFromParent();
+      }
 
       tasks.forEach((t) => updateBoundingBox(t, taskMesh));
     }

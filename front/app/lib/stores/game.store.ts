@@ -2,12 +2,14 @@ import { create } from "zustand";
 import { Collidable, GameState, Nullable, TaskConfig } from "../types";
 
 type GameStore = {
+  lifes: number;
   state: Nullable<GameState>;
   tasks: Array<Collidable>;
   workLoads: Array<Collidable>;
   worldWidth: number;
   worldHeight: number;
   tasksConfig: Array<TaskConfig>;
+  takeVacationDay: () => void;
   setGameState: (state: GameState) => void;
   setTasks: (task: Collidable) => void;
   setWorldHeight: (height: number) => void;
@@ -16,10 +18,12 @@ type GameStore = {
   deleteWorkLoad: (wl: Collidable) => void;
   setTasksConfig: (tc: Array<TaskConfig>) => void;
   deleteTask: (task: Collidable) => void;
+  gameOver: () => void;
 };
 
 export const useGameStore = create<GameStore>()((set) => ({
   state: null,
+  lifes: 3,
   tasks: [],
   workLoads: [],
   worldWidth: 0,
@@ -57,4 +61,12 @@ export const useGameStore = create<GameStore>()((set) => ({
       }
       return state;
     }),
+  gameOver: () =>
+    set(() => ({
+      lifes: 3,
+      state: "OVER",
+      tasks: [],
+      workLoads: [],
+    })),
+  takeVacationDay: () => set((state) => ({ lifes: state.lifes - 1 })),
 }));
