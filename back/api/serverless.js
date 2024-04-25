@@ -18,7 +18,6 @@ app.register(import("../dist/app.js"));
 export default async (req, res) => {
   try {
     await app.ready();
-    console.log("coucou")
     app.server.emit("request", req, res);
   } catch (err) {
     console.error(err);
