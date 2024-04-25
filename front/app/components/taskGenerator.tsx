@@ -33,7 +33,6 @@ export default function TaskGenerator() {
 
   const generateTask = (): void => {
     const { color, ...data } = chooseTaskConfig();
-    console.log({ color });
     const ambivalent = Math.random() > 0.5 ? 1 : -1;
 
     const mesh = new Mesh(
