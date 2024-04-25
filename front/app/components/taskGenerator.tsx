@@ -14,9 +14,11 @@ import { DOWN, INITIAL_TASK, TASK_SPAWN_RATE } from "../lib/contants";
 
 export default function TaskGenerator() {
   const { scene } = useThree();
-  const { checkCollision, updateBoundingBox } = useGameHelper();
-  const [meshes, setMeshes] = useState(new Group());
+  const { checkCollision, updateBoundingBox, chooseTaskConfig } =
+    useGameHelper();
   const { tasks, setTasks, worldWidth, worldHeight } = useGameStore();
+
+  const [meshes, setMeshes] = useState(new Group());
 
   let delay = 0;
   useFrame((_, delta) => {
@@ -30,13 +32,16 @@ export default function TaskGenerator() {
   });
 
   const generateTask = (): void => {
+    const { color, ...data } = chooseTaskConfig();
+    console.log({ color });
+    const ambivalent = Math.random() > 0.5 ? 1 : -1;
+
     const mesh = new Mesh(
       new BoxGeometry(...INITIAL_TASK),
-      new MeshBasicMaterial()
+      new MeshBasicMaterial({ color: color })
     );
 
-    mesh.userData = { value: 10, life: 50 };
-    const ambivalent = Math.random() > 0.5 ? 1 : -1;
+    mesh.userData = data;
     mesh.position.set(
       Math.floor(Math.random() * worldWidth * ambivalent),
       worldHeight / 2,

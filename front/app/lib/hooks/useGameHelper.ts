@@ -1,7 +1,7 @@
 import { useThree } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import { Frustum, Matrix4, Object3D, Object3DEventMap, Vector3 } from "three";
-import { Collidable } from "../types";
+import { Collidable, TaskConfig } from "../types";
 import { useGameStore } from "../stores/game.store";
 import { usePlayerStore } from "../stores/player.store";
 
@@ -11,6 +11,7 @@ interface GameHelper {
   checkCollision: (group: Array<Collidable>) => void;
   getShipInitialPosition: () => Vector3;
   updateBoundingBox: (c: Collidable, o: Object3D<Object3DEventMap>) => void;
+  chooseTaskConfig: () => TaskConfig;
 }
 
 export default function useGameHelper(): GameHelper {
@@ -18,8 +19,10 @@ export default function useGameHelper(): GameHelper {
   const {
     workLoads,
     worldWidth,
+    tasksConfig,
     setWorldWidth,
     setWorldHeight,
+    setTasksConfig,
     deleteWorkLoad,
     deleteTask,
   } = useGameStore();
@@ -47,6 +50,16 @@ export default function useGameHelper(): GameHelper {
 
   useEffect(() => {
     setWorldHeight(viewport.height);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/tasks`, {
+        method: "GET",
+      });
+      const data = await res.json();
+      setTasksConfig(data.tasks);
+    })();
   }, []);
 
   const isInFieldOfView = (object: Object3D): boolean =>
@@ -93,11 +106,28 @@ export default function useGameHelper(): GameHelper {
     }
   };
 
+  const chooseTaskConfig = (): TaskConfig => {
+    const probability = Math.random();
+    const level1 = tasksConfig[0].spawnRate + tasksConfig[1].spawnRate;
+    const level2 = level1 + tasksConfig[2].spawnRate;
+
+    if (probability <= tasksConfig[0].spawnRate) {
+      return tasksConfig[0];
+    } else if (probability > level1 && probability <= level2) {
+      return tasksConfig[2];
+    } else if (probability > level2) {
+      return tasksConfig[3];
+    } else {
+      return tasksConfig[1];
+    }
+  };
+
   return {
     isInFieldOfView,
     canMove,
     checkCollision,
     getShipInitialPosition,
     updateBoundingBox,
+    chooseTaskConfig,
   };
 }

@@ -1,24 +1,31 @@
 import { create } from "zustand";
-import { Collidable } from "../types";
+import { Collidable, GameState, Nullable, TaskConfig } from "../types";
 
 type GameStore = {
+  state: Nullable<GameState>;
   tasks: Array<Collidable>;
   workLoads: Array<Collidable>;
   worldWidth: number;
   worldHeight: number;
+  tasksConfig: Array<TaskConfig>;
+  setGameState: (state: GameState) => void;
   setTasks: (task: Collidable) => void;
   setWorldHeight: (height: number) => void;
   setWorkLoads: (wl: Collidable) => void;
   setWorldWidth: (width: number) => void;
   deleteWorkLoad: (wl: Collidable) => void;
+  setTasksConfig: (tc: Array<TaskConfig>) => void;
   deleteTask: (task: Collidable) => void;
 };
 
 export const useGameStore = create<GameStore>()((set) => ({
+  state: null,
   tasks: [],
   workLoads: [],
   worldWidth: 0,
   worldHeight: 0,
+  tasksConfig: [],
+  setGameState: (state: GameState) => set(() => ({ state })),
   setWorldWidth: (width: number) =>
     set(() => ({ worldWidth: Math.floor(width / 2) })),
   setWorldHeight: (height: number) => set(() => ({ worldHeight: height })),
@@ -26,6 +33,7 @@ export const useGameStore = create<GameStore>()((set) => ({
     set((state) => ({ tasks: [...state.tasks, task] })),
   setWorkLoads: (wl: Collidable) =>
     set((state) => ({ workLoads: [...state.workLoads, wl] })),
+  setTasksConfig: (tc: Array<TaskConfig>) => set(() => ({ tasksConfig: tc })),
   deleteWorkLoad: (currentWL: Collidable) =>
     set((state) => {
       const wlToDelete = state.workLoads.findIndex(
