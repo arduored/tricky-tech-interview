@@ -31,7 +31,7 @@ export default function Ship() {
     getShipInitialPosition,
     updateBoundingBox,
   } = useGameHelper();
-  const { workLoads, setWorkLoads } = useGameStore();
+  const { state, workLoads, setWorkLoads } = useGameStore();
 
   const [initialPosition] = useState<Vector3>(getShipInitialPosition());
   const [direction, setDirection] = useState<Vector3>();
@@ -60,9 +60,10 @@ export default function Ship() {
   }, [control]);
 
   useFrame(() => {
-    move(direction);
-
-    updateProjectiles();
+    if (state === "RUNNING") {
+      move(direction);
+      updateProjectiles();
+    }
   });
 
   const move = (direction: Maybe<Vector3>): void => {

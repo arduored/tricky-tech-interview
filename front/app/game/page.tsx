@@ -16,13 +16,9 @@ export default function Game() {
 
   const renderGame = () => (
     <Canvas>
-      {state === "RUNNING" ? (
-        <>
-          <ambientLight />
-          <TaskGenerator />
-          <Ship />
-        </>
-      ) : null}
+      <ambientLight />
+      <TaskGenerator />
+      <Ship />
     </Canvas>
   );
 

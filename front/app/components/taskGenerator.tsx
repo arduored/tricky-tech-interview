@@ -16,20 +16,22 @@ export default function TaskGenerator() {
   const { scene } = useThree();
   const { checkCollision, updateBoundingBox, chooseTaskConfig, hasOverFlawn } =
     useGameHelper();
-  const { tasks, setTasks, worldWidth, worldHeight, takeVacationDay } =
+  const { state, tasks, setTasks, worldWidth, worldHeight, takeVacationDay } =
     useGameStore();
 
   const [meshes, setMeshes] = useState(new Group());
 
   let delay = 0;
   useFrame((_, delta) => {
-    if (delay > TASK_SPAWN_RATE) {
-      delay = 0;
-      generateTask();
+    if (state === "RUNNING") {
+      if (delay > TASK_SPAWN_RATE) {
+        delay = 0;
+        generateTask();
+      }
+      updateTasksPosition();
+      checkCollision(tasks);
+      delay += delta;
     }
-    updateTasksPosition();
-    checkCollision(tasks);
-    delay += delta;
   });
 
   const generateTask = (): void => {
